@@ -55,53 +55,47 @@ jobs:
             --source "GITHUB_ACTIONS" \
             --create-repo-if-missing
 
-deploy-aws:
+  deploy:
     needs: cortex-scan
-    if: ${{ github.event.client_payload.cloud == 'aws' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy to AWS
-        uses: ./.github/workflows/final-deploy.yml
+      - name: Checkout IaC repo
+        uses: actions/checkout@v4
         with:
-          repo: ${{ github.event.client_payload.repo }}
+          repository: ${{ github.event.client_payload.repo }}
           ref: ${{ github.event.client_payload.ref }}
-          cloud: aws
-          aws_region: ${{ github.event.client_payload.aws_region }}
-        secrets:
-          GH_PAT: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT }}
+
+      # AWS Deploy
+      - name: Deploy to AWS
+        if: ${{ github.event.client_payload.cloud == 'aws' }}
+        env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ github.event.client_payload.aws_region }}
+        run: |
+          echo "Deploying to AWS region: $AWS_REGION"
+          terraform init
+          terraform apply -auto-approve
 
-  deploy-azure:
-    needs: cortex-scan
-    if: ${{ github.event.client_payload.cloud == 'azure' }}
-    runs-on: ubuntu-latest
-    steps:
+      # Azure Deploy
       - name: Deploy to Azure
-        uses: ./.github/workflows/final-deploy.yml
-        with:
-          repo: ${{ github.event.client_payload.repo }}
-          ref: ${{ github.event.client_payload.ref }}
-          cloud: azure
-        secrets:
-          GH_PAT: ${{ secrets.GH_PAT }}
+        if: ${{ github.event.client_payload.cloud == 'azure' }}
+        env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
 
-  deploy-gcp:
-    needs: cortex-scan
-    if: ${{ github.event.client_payload.cloud == 'gcp' }}
-    runs-on: ubuntu-latest
-    steps:
+      # GCP Deploy
       - name: Deploy to GCP
-        uses: ./.github/workflows/final-deploy.yml
-        with:
-          repo: ${{ github.event.client_payload.repo }}
-          ref: ${{ github.event.client_payload.ref }}
-          cloud: gcp
-        secrets:
-          GH_PAT: ${{ secrets.GH_PAT }}
+        if: ${{ github.event.client_payload.cloud == 'gcp' }}
+        env:
           GCP_WIP: ${{ secrets.GCP_WIP }}
           GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}
           GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
