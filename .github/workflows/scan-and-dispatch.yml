@@ -67,4 +67,5 @@ jobs:
             --repo $GITHUB_REPOSITORY \
             -f repo=${{ github.event.client_payload.repo }} \
             -f ref=${{ github.event.client_payload.ref }} \
-            -f aws_region=${{ github.event.client_payload.aws_region }}
+            -f aws_region=${{ github.event.client_payload.aws_region }} \
+            -f bucket_name=${{ github.event.client_payload.bucket_name }}

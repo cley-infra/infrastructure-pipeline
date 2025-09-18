@@ -20,7 +20,8 @@ jobs:
       repo: ${{ inputs.repo }}
       ref: ${{ inputs.ref }}
       cloud: aws
-      aws_region: ${{ inputs.aws_region }}  
+      aws_region: ${{ inputs.aws_region }}
+      bucket_name: ${{ inputs.bucket_name }}
     secrets:
       GH_PAT: ${{ secrets.GH_PAT }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
