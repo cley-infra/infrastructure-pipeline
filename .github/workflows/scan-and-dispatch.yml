@@ -50,20 +50,58 @@ jobs:
             --api-key-id "${CORTEX_API_KEY_ID}" \
             code scan \
             --directory "${{github.workspace}}" \
-            --repo-id "${{github.repository}}" \
-            --branch "${{github.ref_name}}" \
+            --repo-id "${{ github.event.client_payload.repo }}" \
+            --branch "${{ github.event.client_payload.ref }}" \
             --source "GITHUB_ACTIONS" \
             --create-repo-if-missing
 
-  dispatch-deploy:
+deploy-aws:
     needs: cortex-scan
+    if: ${{ github.event.client_payload.cloud == 'aws' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger cloud specific workflow
-        run: |
-          CLOUD="${{ github.event.client_payload.cloud }}"
-          echo "Dispatching deploy for $CLOUD"
-          gh workflow run deploy-${CLOUD}.yml \
-            --repo $GITHUB_REPOSITORY \
-            -f repo=${{ github.event.client_payload.repo }} \
-            -f ref=${{ github.event.client_payload.ref }}
+      - name: Deploy to AWS
+        uses: ./.github/workflows/final-deploy.yml
+        with:
+          repo: ${{ github.event.client_payload.repo }}
+          ref: ${{ github.event.client_payload.ref }}
+          cloud: aws
+          aws_region: ${{ github.event.client_payload.aws_region }}
+        secrets:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  deploy-azure:
+    needs: cortex-scan
+    if: ${{ github.event.client_payload.cloud == 'azure' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Azure
+        uses: ./.github/workflows/final-deploy.yml
+        with:
+          repo: ${{ github.event.client_payload.repo }}
+          ref: ${{ github.event.client_payload.ref }}
+          cloud: azure
+        secrets:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+  deploy-gcp:
+    needs: cortex-scan
+    if: ${{ github.event.client_payload.cloud == 'gcp' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GCP
+        uses: ./.github/workflows/final-deploy.yml
+        with:
+          repo: ${{ github.event.client_payload.repo }}
+          ref: ${{ github.event.client_payload.ref }}
+          cloud: gcp
+        secrets:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GCP_WIP: ${{ secrets.GCP_WIP }}
+          GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}

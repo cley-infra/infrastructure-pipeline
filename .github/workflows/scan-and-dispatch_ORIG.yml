@@ -1,0 +1,69 @@
+name: Security Scan & Dispatch Pipeline
+
+on:
+  repository_dispatch:
+    types: [iac-deploy]
+
+env:
+  # Cortex secrets
+  CORTEX_API_KEY: ${{ secrets.CORTEX_API_KEY }}
+  CORTEX_API_KEY_ID: ${{ secrets.CORTEX_API_KEY_ID }}
+  CORTEX_API_URL: ${{ secrets.CORTEX_API_URL }}
+  # GitHub token for dispatch
+  GH_TOKEN: ${{ secrets.GH_PAT }}
+
+jobs:
+  cortex-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout IaC Repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.client_payload.repo }}
+          ref: ${{ github.event.client_payload.ref }}
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify Node.js Version
+        run: node -v
+
+      - name: Download Cortex CLI
+        run: |
+          set -x
+          crtx_resp=$(curl "${CORTEX_API_URL}/public_api/v1/unified-cli/releases/download-link?os=linux&architecture=amd64" \
+            -H "x-xdr-auth-id: ${CORTEX_API_KEY_ID}" \
+            -H "Authorization: ${CORTEX_API_KEY}")
+          crtx_url=$(echo $crtx_resp | jq -r ".signed_url")
+          curl -o cortexcli $crtx_url
+          chmod +x cortexcli
+          ./cortexcli --version
+
+      - name: Run Cortex CLI Code Scan
+        run: |
+          ./cortexcli \
+            --api-base-url "${CORTEX_API_URL}" \
+            --api-key "${CORTEX_API_KEY}" \
+            --api-key-id "${CORTEX_API_KEY_ID}" \
+            code scan \
+            --directory "${{github.workspace}}" \
+            --repo-id "${{github.repository}}" \
+            --branch "${{github.ref_name}}" \
+            --source "GITHUB_ACTIONS" \
+            --create-repo-if-missing
+
+  dispatch-deploy:
+    needs: cortex-scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger cloud specific workflow
+        run: |
+          CLOUD="${{ github.event.client_payload.cloud }}"
+          echo "Dispatching deploy for $CLOUD"
+          gh workflow run deploy-${CLOUD}.yml \
+            --repo $GITHUB_REPOSITORY \
+            -f repo=${{ github.event.client_payload.repo }} \
+            -f ref=${{ github.event.client_payload.ref }}
