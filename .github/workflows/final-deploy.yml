@@ -1,0 +1,33 @@
+name: Final Deploy
+on:
+  workflow_call:
+    inputs:
+      repo:
+        required: true
+        type: string
+      ref:
+        required: true
+        type: string
+      cloud:
+        required: true
+        type: string
+    secrets:
+      GH_PAT:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout IaC repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ inputs.repo }}
+          ref: ${{ inputs.ref }}
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve

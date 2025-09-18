@@ -1,0 +1,68 @@
+# Fichiers et dossiers spécifiques au système d'exploitation
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Fichiers de configuration de l'IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.vs/
+*.sln
+*.suo
+
+# Dépendances de paquets
+node_modules/
+vendor/
+build/
+dist/
+target/
+
+# Logs et données temporaires
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+tmp/
+temp/
+/log/
+/logs/
+
+# Fichiers de cache et de compilation
+*.cache
+*.swp
+*.swo
+*.pyc
+__pycache__/
+*.o
+*.a
+*.so
+*.dll
+*.exe
+
+# Fichiers d'archive
+*.zip
+*.tar
+*.gz
+*.rar
+
+# Fichiers spécifiques à des langages ou frameworks
+# Python
+venv/
+.env
+
+# Ruby
+.bundle/
+
+# Java
+.classpath
+.project
+.settings/
+bin/
+
+# Fichiers générés par des outils
+coverage/
+.grunt/
+.sass-cache/
+/coverage/

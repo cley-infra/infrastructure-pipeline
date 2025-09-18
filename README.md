@@ -55,6 +55,7 @@ This architecture enables DevOps and Security teams (DevSecOps) to enforce secur
 | `GH_PAT`           | GitHub PAT for cross-repo checkout & workflow dispatch |
 | `CORTEX_API_KEY_ID`     | Cortex Cloud API Key ID|
 | `CORTEX_API_KEY`     | Cortex Cloud API Key |
+| `CORTEX_API_URL`     | Cortex Cloud API URL |
 | `AWS_ACCESS_KEY_ID` | AWS credentials for deployment |
 | `AWS_SECRET_ACCESS_KEY` | AWS credentials |
 | `AZURE_CLIENT_ID`  | Azure service principal |
