@@ -24,8 +24,6 @@ This architecture enables DevOps and Security teams (DevSecOps) to enforce secur
 | AWS Deploy (`deploy-aws.yml`) | [![AWS Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-aws.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-aws.yml) |
 | Azure Deploy (`deploy-azure.yml`) | [![Azure Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-azure.yml) |
 | GCP Deploy (`deploy-gcp.yml`) | [![GCP Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-gcp.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-gcp.yml) |
-| Final Deploy (`final-deploy.yml`) | [![Scan & Deploy Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/final-deploy.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/final-deploy.yml) |
-
 
 ---
 
