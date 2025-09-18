@@ -15,6 +15,17 @@ Key features:
 This architecture enables DevOps and Security teams (DevSecOps) to enforce security policies **before deploying any infrastructure**.
 
 ---
+## Workflow Status
+
+| Workflow                  | Status |
+|----------------------------|--------|
+| Central Dispatch (`dispatch.yml`) | ![Dispatch Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/dispatch.yml/badge.svg) |
+| Reusable Scan & Deploy (`scan-and-deploy.yml`) | ![Scan & Deploy Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/scan-and-deploy.yml/badge.svg) |
+| AWS Deploy (`deploy-aws.yml`) | ![AWS Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-aws.yml/badge.svg) |
+| Azure Deploy (`deploy-azure.yml`) | ![Azure Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-azure.yml/badge.svg) |
+| GCP Deploy (`deploy-gcp.yml`) | ![GCP Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-gcp.yml/badge.svg) |
+
+---
 
 ## Workflow Architecture
 
