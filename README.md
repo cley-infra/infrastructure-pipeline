@@ -15,15 +15,17 @@ Key features:
 This architecture enables DevOps and Security teams (DevSecOps) to enforce security policies **before deploying any infrastructure**.
 
 ---
+
 ## Workflow Status
 
 | Workflow                  | Status |
 |----------------------------|--------|
-| Central Scan & Dispatch (`scan-and-dispatch.yml`) | ![Dispatch Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/scan-and-dispatch.yml/badge.svg) |
-| AWS Deploy (`deploy-aws.yml`) | ![AWS Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-aws.yml/badge.svg) |
-| Azure Deploy (`deploy-azure.yml`) | ![Azure Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-azure.yml/badge.svg) |
-| GCP Deploy (`deploy-gcp.yml`) | ![GCP Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-gcp.yml/badge.svg) |
-| Final Deploy (`final-deploy.yml`) | ![Scan & Deploy Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/final-deploy.yml/badge.svg) |
+| Central Scan & Dispatch (`scan-and-dispatch.yml`) | [![Dispatch Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/scan-and-dispatch.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/scan-and-dispatch.yml) |
+| AWS Deploy (`deploy-aws.yml`) | [![AWS Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-aws.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-aws.yml) |
+| Azure Deploy (`deploy-azure.yml`) | [![Azure Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-azure.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-azure.yml) |
+| GCP Deploy (`deploy-gcp.yml`) | [![GCP Deploy](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-gcp.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/deploy-gcp.yml) |
+| Final Deploy (`final-deploy.yml`) | [![Scan & Deploy Workflow](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/final-deploy.yml/badge.svg)](https://github.com/cley-infra/infrastructure-pipeline/actions/workflows/final-deploy.yml) |
+
 
 ---
 

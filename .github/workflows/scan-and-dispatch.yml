@@ -1,4 +1,4 @@
-name: Central Scan & Dispatch Pipeline
+name: Security Scan & Dispatch Pipeline
 
 on:
   repository_dispatch:
