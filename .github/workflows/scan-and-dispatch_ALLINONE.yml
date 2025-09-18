@@ -1,4 +1,4 @@
-name: Security Scan & Dispatch Pipeline
+name: ALLINONE - Security Scan & Dispatch Pipeline
 
 on:
   repository_dispatch:
@@ -50,21 +50,52 @@ jobs:
             --api-key-id "${CORTEX_API_KEY_ID}" \
             code scan \
             --directory "${{github.workspace}}" \
-            --repo-id "${{github.repository}}" \
-            --branch "${{github.ref_name}}" \
+            --repo-id "${{ github.event.client_payload.repo }}" \
+            --branch "${{ github.event.client_payload.ref }}" \
             --source "GITHUB_ACTIONS" \
             --create-repo-if-missing
 
-  dispatch-deploy:
+  deploy:
     needs: cortex-scan
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger cloud specific workflow
+      - name: Checkout IaC repo
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.client_payload.repo }}
+          ref: ${{ github.event.client_payload.ref }}
+          token: ${{ secrets.GH_PAT }}
+
+      # AWS Deploy
+      - name: Deploy to AWS
+        if: ${{ github.event.client_payload.cloud == 'aws' }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ github.event.client_payload.aws_region }}
         run: |
-          CLOUD="${{ github.event.client_payload.cloud }}"
-          echo "Dispatching deploy for $CLOUD"
-          gh workflow run deploy-${CLOUD}.yml \
-            --repo $GITHUB_REPOSITORY \
-            -f repo=${{ github.event.client_payload.repo }} \
-            -f ref=${{ github.event.client_payload.ref }} \
-            -f aws_region=${{ github.event.client_payload.aws_region }}
+          echo "Deploying to AWS region: $AWS_REGION"
+          terraform init
+          terraform apply -auto-approve
+
+      # Azure Deploy
+      - name: Deploy to Azure
+        if: ${{ github.event.client_payload.cloud == 'azure' }}
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
+
+      # GCP Deploy
+      - name: Deploy to GCP
+        if: ${{ github.event.client_payload.cloud == 'gcp' }}
+        env:
+          GCP_WIP: ${{ secrets.GCP_WIP }}
+          GCP_SA_EMAIL: ${{ secrets.GCP_SA_EMAIL }}
+          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
