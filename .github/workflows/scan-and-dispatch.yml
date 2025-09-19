@@ -68,4 +68,8 @@ jobs:
             -f repo=${{ github.event.client_payload.repo }} \
             -f ref=${{ github.event.client_payload.ref }} \
             -f aws_region=${{ github.event.client_payload.aws_region }} \
-            -f bucket_name=${{ github.event.client_payload.bucket_name }}
+            -f bucket_name=${{ github.event.client_payload.bucket_name }} \
+            -f ami_id=${{ github.event.client_payload.ami_id }} \
+            -f instance_type=${{ github.event.client_payload.instance_type }} \
+            -f key_name=${{ github.event.client_payload.key_name }} 
+
